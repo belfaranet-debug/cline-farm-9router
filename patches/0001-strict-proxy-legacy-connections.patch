@@ -1,0 +1,40 @@
+From b0fcd4e3f616e27ab511eb1eaeac05c451446985 Mon Sep 17 00:00:00 2001
+From: Belfara <belfara@local>
+Date: Thu, 15 Oct 2026 19:05:49 +0700
+Subject: [PATCH] fix(proxy): honour strictProxy on legacy per-connection
+ proxies
+
+The legacy per-connection branch of resolveConnectionProxyConfig returned
+`strictProxy: poolStrictProxy`, which is always false when no proxy pool is
+configured. As a result the value read from providerSpecificData was dropped
+and a dead per-connection proxy silently fell back to the host's direct IP
+(log: "[ProxyFetch] Proxy failed, falling back to direct").
+
+That defeats the purpose of per-connection residential proxies: a failing
+proxy leaks requests out of the server's own IP.
+
+Return the connection's own flag when set:
+  strictProxy: providerSpecificData?.strictProxy === true || poolStrictProxy
+---
+ src/lib/network/connectionProxy.js | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/lib/network/connectionProxy.js b/src/lib/network/connectionProxy.js
+index 171d606..3c28d10 100644
+--- a/src/lib/network/connectionProxy.js
++++ b/src/lib/network/connectionProxy.js
+@@ -232,7 +232,10 @@ export async function resolveConnectionProxyConfig(
+         proxyPoolId: proxyPoolIdRaw || null,
+         proxyPool: null,
+ 
+-        strictProxy: poolStrictProxy,
++        // Legacy per-connection proxies honour their own strict flag. Without
++        // this the value read from providerSpecificData was dropped here, so a
++        // dead proxy silently fell back to the host's direct IP.
++        strictProxy: providerSpecificData?.strictProxy === true || poolStrictProxy,
+ 
+         ...legacy,
+       };
+-- 
+2.43.0
+

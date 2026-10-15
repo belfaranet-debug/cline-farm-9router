@@ -1,0 +1,17 @@
+# never publish credentials or harvested state
+*.env
+.env*
+*keys*.txt
+*keys*.jsonl
+*keys*.csv
+*keys*.json
+proxies*.txt
+*accounts*.jsonl
+*backup*.json
+*state*.json
+*.sqlite
+*.db
+cookies*
+session*
+__pycache__/
+*.pyc
