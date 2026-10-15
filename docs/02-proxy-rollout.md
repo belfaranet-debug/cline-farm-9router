@@ -18,7 +18,7 @@ supaya tiap key keluar dari **IP berbeda** — bukan menumpuk di IP host r5-2600
 |---|---|
 | Connection cline total | 102 |
 | Connection dengan proxy aktif | **100** |
-| Proxy unik terpakai | **100** (sid 278377050–278377149, 1:1) |
+| Proxy unik terpakai | **100** (sid <sid>–<sid>, 1:1) |
 | Terpasang | `applied: ok=100 fail=0` |
 | Bukti di log 9router | `[PROXY] CLINE \| <model> \| conn=farm-001 \| url=http://gw.proxyrise.com:443` |
 | Request nyata lewat proxy | **HTTP 200 `PROXYOK`** (farm-001, 2,7s) |
@@ -26,10 +26,10 @@ supaya tiap key keluar dari **IP berbeda** — bukan menumpuk di IP host r5-2600
 | Egress berbeda per connection | 4 IP berbeda dari 4 sample |
 
 Sample egress:
-- `farm-001` → `103.51.44.105`
-- `farm-026` → `180.243.0.184`
-- `farm-051` → `103.247.15.146`
-- `farm-100` → `182.253.217.84`
+- `farm-001` → `<exit-ip>`
+- `farm-026` → `<exit-ip>`
+- `farm-051` → `<exit-ip>`
+- `farm-100` → `<exit-ip>`
 
 ## Efek samping yang terbukti dari log
 9router **cascade lintas connection** saat satu gagal — log menunjukkan

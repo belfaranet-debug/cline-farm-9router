@@ -9,12 +9,12 @@ tanggal: 2026-10-15 · 9router mibp :20133 · provider `cline`
 | connection cline total | **102** |
 | punya proxy | **102 (100%)** |
 | `strictProxy=true` | **102 (100%)** |
-| sid unik dipakai | **102** (278377050–278377151, tanpa dobel) |
+| sid unik dipakai | **102** (<sid>–<sid>, tanpa dobel) |
 | strategi rotasi | `round-robin`, `stickyRoundRobinLimit=1` |
 
 Dua connection lama (**`aster`**, **`abelmedika`**) yang tadinya tanpa proxy sekarang juga punya:
-- `aster` → sid-278377150
-- `abelmedika` → sid-278377151
+- `aster` → sid-<sid>
+- `abelmedika` → sid-<sid>
 
 ## 🏆 Hasil uji beban pamungkas
 **100 request paralel** (workers=20, model `cl/anthropic/claude-sonnet-4.6`):

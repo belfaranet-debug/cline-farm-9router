@@ -2,7 +2,7 @@
 tanggal: 2026-10-15 · 9router :20133 (mibp v1.0.18, container `9router-mibp`)
 
 ## Ringkasan
-100 `farm-NNN` connection punya **proxy residential sendiri** (1:1, sid 278377050–278377149)
+100 `farm-NNN` connection punya **proxy residential sendiri** (1:1, sid <sid>–<sid>)
 **dan** `strictProxy=true`, sehingga request **tidak mungkin bocor ke IP host** kalau proxy mati.
 
 ## Bug yang ditemukan & diperbaiki (penting)
