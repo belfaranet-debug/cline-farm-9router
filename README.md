@@ -18,6 +18,7 @@ docs/
   05-full-100-proxy.md         # 102/102 provisioned + 100-parallel proof
 patches/
   0001-strict-proxy-legacy-connections.patch   # the upstream-worthy fix
+UPGRADE-AND-COMPAT.md         # old-repo problems -> fix, so a fresh install works
 scripts/
   proxy_rollout.py             # assign one proxy per connection (idempotent)
   proxy_strict_all.py          # enable strictProxy on every proxied connection
@@ -37,7 +38,32 @@ scripts/
 | `strictProxy` enforced | **102 / 102** |
 | 100 parallel requests | **100/100 HTTP 200 · 100 distinct connections · 100 distinct proxies** |
 | Throughput / latency | 2.72 req/s · p50 5.0s · p95 10.9s |
-| Direct-IP leaks during load | **0** |
+| Direct-IP leaks during load | **0** (only after fix — see [compat notes](UPGRADE-AND-COMPAT.md)) |
+
+## ⚠️ Does a fresh install work? (read this first)
+
+**On the old mibp build (v1.0.18): no — not for per-connection proxies.** A failing
+proxy silently falls back to the **server's own IP** unless this fix is applied.
+Everything else (keys, proxy wiring, rotation) works, but the leak is invisible
+until you read the logs.
+
+Three ways to make a new install behave correctly:
+
+| Route | Action | Survives image rebuild? |
+|---|---|---|
+| **A. Patch the code** | `git apply patches/0001-…patch` **+ patch all compiled chunks + restart** | ❌ re-apply each build |
+| **B. Use a proxy pool** (recommended) | Create the proxy as a **pool** with `strictProxy: true`; the pool branch honours it natively — **no patching** | ✅ |
+| **C. Keep the leak** | Do nothing | ❌ requests escape to your server IP on proxy failure |
+
+Full step-by-step, minified-chunk instructions, verification commands and a table
+of **all six incompatibilities** we hit on the old build:
+**[`UPGRADE-AND-COMPAT.md`](UPGRADE-AND-COMPAT.md)**
+
+Quick self-check on any install — this count must be **0**:
+
+```bash
+docker logs --since 10m <container> | grep -c "falling back to direct"
+```
 
 ## The bug worth upstreaming
 
